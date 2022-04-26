@@ -1,0 +1,42 @@
+CREATE TABLE classrooms(
+    id INT PRIMARY KEY,
+    number INT NOT NULL,
+    course TEXT NOT NULL,
+    floor INT NOT NULL
+);
+
+CREATE TABLE students(
+    id INT PRIMARY KEY,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    gender TEXT NOT NULL,
+    age INT,
+    classroom INT NOT NULL,
+
+    FOREIGN KEY (classroom) REFERENCES classrooms (number)
+);
+
+INSERT INTO students(first_name, last_name, classroom, gender, age) 
+VALUES ('Hleb', 'Serafim', 1, 'M', 22);
+
+INSERT INTO students(first_name, last_name, classroom, gender, age) 
+VALUES ('Sergey', 'Seriy', 2, 'M', 23);
+
+INSERT INTO students(first_name, last_name, classroom, gender, age) 
+VALUES ('Katya', 'Krasovskaya', 3, 'F', 22);
+
+INSERT INTO students(first_name, last_name, classroom, gender, age) 
+VALUES ('Andrey', 'Pupkin', 3, 'M', 24);
+
+INSERT INTO students(first_name, last_name, classroom, gender, age) 
+VALUES ('Vlad', 'Belov', 1, 'M', 23);
+
+
+INSERT INTO classrooms(number, course, floor) 
+VALUES (1, 'Python', 1);
+
+INSERT INTO classrooms(number, course, floor) 
+VALUES (2, 'Java', 1);
+
+INSERT INTO classrooms(number, course, floor) 
+VALUES (3, 'C++', 2);
