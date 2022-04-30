@@ -1,0 +1,160 @@
+# Задание 1
+
+# Один ко многим
+
+CREATE TABLE inventors(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    age INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    phone TEXT NOT NULL
+);
+
+CREATE TABLE inventions(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    inventor_id INTEGER,
+
+    FOREIGN KEY (inventor_id) REFERENCES inventors(id)
+);
+
+
+# Один к одному
+
+CREATE TABLE inventors(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    age INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    phone TEXT NOT NULL
+);
+
+CREATE TABLE inventions(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    inventor_id INTEGER UNIQUE,
+
+    FOREIGN KEY (inventor_id) REFERENCES inventors(id)
+);
+
+
+# Многие ко многим
+
+CREATE TABLE inventors(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    age INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    phone TEXT NOT NULL
+);
+
+CREATE TABLE inventions(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    inventor_id INTEGER
+);
+
+CREATE TABLE inventors_inventions(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    inventor_id INTEGER NOT NULL,
+    invention_id INTEGER NOT NULL,
+
+    FOREIGN KEY (inventor_id) REFERENCES inventors(id),
+    FOREIGN KEY (inventions_id) REFERENCES inventions(id)
+);
+
+
+# Задание 2
+
+# Используем таблицы inventors, inventions "один ко многим"
+
+INSERT INTO inventors(age, name, phone)
+VALUES (40, "Jack Brown", "134-56-74");
+
+INSERT INTO inventors(age, name, phone)
+VALUES (55, "John Smith", "117-44-60");
+
+INSERT INTO inventors(age, name, phone)
+VALUES (70, "Michael Goofy", "259-98-07");
+
+INSERT INTO inventors(age, name, phone)
+VALUES (52, "Loren Hood", "388-14-50");
+
+
+INSERT INTO inventions(name, inventor_id)
+VALUES ("Radioactive guitar", 1);
+
+INSERT INTO inventions(name, inventor_id)
+VALUES ("Bicycle without wheels", 1);
+
+INSERT INTO inventions(name, inventor_id)
+VALUES ("Smart glasses", 2);
+
+INSERT INTO inventions(name, inventor_id)
+VALUES ("Book with self-turning pages", 3);
+
+INSERT INTO inventions(name, inventor_id)
+VALUES ("Self-making bed", 3);
+
+INSERT INTO inventions(name, inventor_id)
+VALUES ("Self-making bed", 3);
+
+INSERT INTO inventions(name, inventor_id)
+VALUES ("Jet scooter", 5);
+
+
+SELECT * FROM inventors LEFT OUTER JOIN inventions ON inventions.inventor_id == inventors.id;
+
+SELECT * FROM inventors RIGHT OUTER JOIN inventions ON inventions.inventor_id == inventors.id;
+
+SELECT * FROM inventors INNER JOIN inventions ON inventions.inventor_id == inventors.id;
+
+SELECT * FROM inventors FULL OUTER JOIN inventions ON inventions.inventor_id == inventors.id;
+
+SELECT * FROM inventors CROSS JOIN inventions ON inventions.inventor_id == inventors.id;
+
+SELECT * FROM inventors FULL OUTER JOIN inventions ON inventions.inventor_id == inventors.id
+WHERE inventions.inventor_id is Null OR inventors.id is Null;
+
+SELECT * FROM inventors LEFT OUTER JOIN inventions ON inventions.inventor_id == inventors.id
+WHERE inventions.inventor_id is Null;
+
+SELECT * FROM inventors RIGHT OUTER JOIN inventions ON inventions.inventor_id == inventors.id
+WHERE inventors.id is Null;
+
+
+# Задание 3
+
+CREATE TABLE authors(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL
+);
+
+
+CREATE TABLE books(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    year DATE NOT NULL,
+    author_id INTEGER NOT NULL,
+
+    FOREIGN KEY (author_id) REFERENCES authors(id)
+);
+
+INSERT INTO authors(first_name, last_name) VALUES ("Владимир", "Маяковский");
+INSERT INTO authors(first_name, last_name) VALUES ("Александр", "Пушкин");
+
+
+INSERT INTO books(name, year, author_id) VALUES ("Облако в штанах", 1915, 1);
+INSERT INTO books(name, year, author_id) VALUES ("Сказка о рыбаке и рыбке", 1835, 2);
+INSERT INTO books(name, year, author_id) VALUES ("Какая-то рандомная книга", 1835, 2);
+
+SELECT COUNT(*) as result, first_name, last_name
+FROM authors a, books b
+WHERE a.id = b.author_id
+GROUP BY author_id
+ORDER BY result desc
+limit 1;
+
+
+# Задание 4
+
+SELECT * FROM authors
+WHERE id = (SELECT author_id FROM books WHERE name="Облако в штанах");
