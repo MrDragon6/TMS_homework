@@ -1,0 +1,70 @@
+CREATE TABLE books(
+    isbn TEXT NOT NULL PRIMARY KEY,
+    author TEXT NOT NULL,
+    year INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    publishing_house TEXT NOT NULL
+);
+
+# isbn используем в качестве id, т.к. isbn уникален для каждой книги
+
+
+CREATE TABLE book_rooms(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+
+CREATE TABLE readers(
+    passport_id TEXT NOT NULL PRIMARY KEY,
+    full_name TEXT NOT NULL,
+    address TEXT NOT NULL,
+    phone TEXT NOT NULL
+);
+
+
+CREATE TABLE lending_cards(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    book_id INTEGER NOT NULL,
+    reader_id INTEGER NOT NULL,
+
+    FOREIGN KEY (book_id) REFERENCES books(isbn),
+    FOREIGN KEY (reader_id) REFERENCES readers(passport_id)
+);
+
+
+CREATE TABLE booking_cards(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    booking_day DATE NOT NULL,
+    book_id INTEGER NOT NULL,
+    reader_id INTEGER NOT NULL,
+
+    FOREIGN KEY (book_id) REFERENCES books(isbn),
+    FOREIGN KEY (reader_id) REFERENCES readers(passport_id)
+);
+
+
+CREATE TABLE book_positions(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    quantity TEXT NOT NULL,
+    shelf_id TEXT NOT NULL,
+    book_id INTEGER NOT NULL,
+    room_id INTEGER NOT NULL,
+
+    FOREIGN KEY (book_id) REFERENCES books(isbn),
+    FOREIGN KEY (room_id) REFERENCES book_rooms(id)
+);
+
+
+CREATE TABLE admins(
+    login TEXT NOT NULL PRIMARY KEY,
+    password TEXT NOT NULL
+);
+
+
+CREATE TABLE librarians(
+    login TEXT NOT NULL PRIMARY KEY,
+    password TEXT NOT NULL
+);
