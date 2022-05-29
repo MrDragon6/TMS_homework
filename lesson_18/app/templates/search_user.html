@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if user %}
+        <p>{{ user.id, user.username, user.password }}</p>
+    {% else %}
+        <h2 class="subtitle">
+                No user with id {{ search_id }}
+        </h2>
+    {% endif %}
+{% endblock %}
