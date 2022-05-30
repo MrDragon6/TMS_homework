@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "first_name": "Hleb",
+        "last_name": "Serafim",
+        "age": 22,
+        "programming_languages": ["Python", "JS", "C#", "C++"]
+    },
+    {
+        "id": 2,
+        "first_name": "Dima",
+        "last_name": "Mishuto",
+        "age": 21,
+        "programming_languages": ["Python", "C#", "Ruby"]
+    }
+]
