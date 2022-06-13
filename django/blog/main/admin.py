@@ -1,10 +1,6 @@
 from django.contrib import admin
+from .models import Post, Reader, Category
 
-from . import models
-
-# Register your models here.
-
-
-@admin.register(models.Reader)
-class ReaderAdmin(admin.ModelAdmin):
-    pass
+admin.site.register(Reader)
+admin.site.register(Post)
+admin.site.register(Category)
