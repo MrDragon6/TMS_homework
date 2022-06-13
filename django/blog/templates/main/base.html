@@ -1,0 +1,69 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+
+  <title>
+      {% block title %}
+          The Blog
+      {% endblock %}
+  </title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+</head>
+<body>
+  <ul class="navbar">
+  <li class="navbar"><small><a href="{% url 'home' %}" class="navbar">Home</a></small></li>
+
+  <!-- Category Menu Code -->
+  {% if category_menu %}
+
+  <li class="dropdown">
+    <small><a href="#" class="navbar">Categories</a></small>
+    <div class="dropdown-content">
+      <small>
+
+          {% for item in category_menu %}
+              <a href="{% url 'category' item|slugify %}" >{{ item }}</a>
+          {% endfor %}
+
+      </small>
+    </div>
+  </li>
+  {% else %}
+
+      <li class="navbar">
+              <small><a href="{% url 'category_list' %}" class="navbar">Categories</a></small>
+      </li>
+  {% endif %}
+
+      {% if user.is_authenticated %}
+          <li class="navbar">
+              <small><a href="{% url 'post_add' %}" class="navbar">Add Post</a></small></li>
+          <li class="navbar">
+              <small><a href="{% url 'category_add' %}" class="navbar">Add Category</a></small></li>
+          <li class="navbar_right">
+              <small><a href="{% url 'logout' %}" class="navbar">Logout</a></small></li>
+
+      {% else %}
+          <li class="navbar_right">
+              <small><a href="{% url 'login' %}" class="navbar">Login</a></small></li>
+          <li class="navbar_right">
+              <small><a href="{% url 'signup' %}" class="navbar">Signup</a></small></li>
+
+      {% endif %}
+
+  </ul><br/>
+
+    {% block content %}
+
+    {% endblock %}
+
+</body>
+
+</html>
