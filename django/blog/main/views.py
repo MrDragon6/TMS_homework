@@ -1,13 +1,18 @@
-from django.http import HttpResponseBadRequest, HttpRequest
-from django.shortcuts import render, redirect
+from django.http import HttpResponseBadRequest, HttpRequest, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.forms.models import model_to_dict
+from django.contrib import messages
+
+from django.views import generic
+from django.contrib.auth.forms import UserChangeForm
 
 from .models import Reader, Post, Category
-from .forms import PostForm, EditForm
+from .forms import PostForm, EditForm, UserEditForm
 
 
 @csrf_exempt
@@ -50,21 +55,41 @@ def signup(request: HttpRequest):
 
     elif request.method == 'POST':
         data = request.POST.dict()
-        data.pop('csrfmiddlewaretoken')
-        password = data.pop('password')
+        if data.get('password') == data.get('password_repeat'):
+            data.pop('csrfmiddlewaretoken')
+            data.pop('password_repeat')
+            password = data.pop('password')
 
-        user: User = User.objects.create(**data)
-        user.set_password(password)
-        user.save()
+            user: User = User.objects.create(**data)
+            user.set_password(password)
+            user.save()
 
-        Reader.objects.create(user=user)
+            Reader.objects.create(user=user)
 
-        reader = Reader(user=user)
-        reader.save()
+            reader = Reader(user=user)
+            reader.save()
 
-        return render(request, 'auth/login.html')
+            return render(request, 'auth/login.html')
+        else:
+            messages.warning(request, 'Your passwords don\'t match!')
+            return redirect('/signup/')
 
     return HttpResponseBadRequest('Error')
+
+
+def user_edit(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    if request.method == "GET":
+        form = UserEditForm()
+        print(form)
+        return render(request, 'auth/edit_profile.html', {'form': form})
+    elif request.method == "POST":
+        form = UserEditForm(request.POST, instance=user)
+        if form.is_valid():
+            user = form.save()
+            user.set_password(user.password)
+            user.save()
+        return HttpResponseRedirect(reverse('home'))
 
 
 class HomeView(ListView):
@@ -86,7 +111,17 @@ class PostView(DetailView):
     def get_context_data(self, *args, **kwargs):
         category_menu = Category.objects.all()
         context = super(PostView, self).get_context_data(*args, **kwargs)
+
+        stuff = get_object_or_404(Post, id=self.kwargs['pk'])
+        total_likes = stuff.total_likes()
+
+        liked = False
+        if stuff.likes.filter(id=self.request.user.id).exists():
+            liked = True
+
         context['category_menu'] = category_menu
+        context['total_likes'] = total_likes
+        context['liked'] = liked
         return context
 
 
@@ -148,3 +183,16 @@ class CategoryAddView(CreateView):
         context = super(CategoryAddView, self).get_context_data(*args, **kwargs)
         context['category_menu'] = category_menu
         return context
+
+
+def like_view(request, pk):
+    post = get_object_or_404(Post, id=request.POST.get('post_id'))
+    liked = False
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+        liked = False
+    else:
+        post.likes.add(request.user)
+        liked = True
+
+    return HttpResponseRedirect(reverse('post_view', args=[str(pk)]))

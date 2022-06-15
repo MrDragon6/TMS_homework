@@ -5,15 +5,28 @@
 
 
 {% block content %}
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <div id="login-form-wrap">
       <h2>Sign Up</h2>
-      <form id="login-form" action="{% url 'signup' %}"  method="POST">
+      <form id="login-form" action="{% url 'signup' %}" method="POST">
         {% csrf_token %}
         <p>
         <input type="text" id="username" name="username" placeholder="username" required><i class="validation"><span></span><span></span></i>
         </p>
         <p>
           <input type="text" id="password" name="password" placeholder="password" required><i class="validation"><span></span><span></span></i>
+        </p>
+        <p>
+          <input type="text" name="password_repeat" placeholder="repeat password" required><i class="validation"><span></span><span></span></i>
         </p>
         <p>
           <input type="email" name="email" placeholder="email" required><i class="validation"><span></span><span></span></i>
@@ -32,4 +45,5 @@
         <p>Have Account? <a href="{% url 'login' %}">Login</a><p>
       </div>
     </div>
+
 {% endblock %}

@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from datetime import datetime
 from django.urls import reverse
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 
@@ -41,10 +42,16 @@ class Category(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
+    header_image = models.ImageField(null=True, blank=True, upload_to='images/')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    text = models.TextField()
+    text = RichTextField(blank=True, null=True)
     creation_date = models.DateTimeField(default=datetime.now, blank=True)
     category = models.CharField(max_length=255, default='uncategorized')
+    snippet = models.CharField(max_length=255)
+    likes = models.ManyToManyField(User, related_name='blog_posts')
+
+    def total_likes(self):
+        return self.likes.count()
 
     def __str__(self):
         return f'{self.title} | {self.author}'
@@ -52,3 +59,11 @@ class Post(models.Model):
     @staticmethod
     def get_absolute_url():
         return reverse('home')
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    bio = models.TextField()
+
+    def __str__(self):
+        return str(self.user)
