@@ -8,16 +8,21 @@ Edit Post
 {% block content %}
 
 {% if user.is_authenticated %}
-    <h3>Update Post</h3><br/>
-    <div class="form-group">
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-        <button>Update</button>
-    </form></div>
+    {% if user.id == post.author.id %}
+        <h3>Update Post</h3><br/>
+        <div class="form-group">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.media }}
+                {{ form.as_p }}
+            <button>Update</button>
+        </form></div>
+    {% else %}
+        You're not allowed to edit this post!
+    {% endif %}
 {% else %}
 
-    You're not allowed to edit posts!
+    You're not allowed to edit this post!
 
 {% endif %}
 

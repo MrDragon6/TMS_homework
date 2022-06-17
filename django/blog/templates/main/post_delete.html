@@ -8,18 +8,22 @@ Delete Post
 {% block content %}
 
 {% if user.is_authenticated %}
-    <h3>Delete: {{ post.title }}</h3><br/>
+    {% if user.id == post.author.id %}
+        <h3>Delete: {{ post.title }}</h3><br/>
 
-    <div class="form-group">
-        <form method="POST">
-            {% csrf_token %}
-            <strong><small>Are you sure?</small></strong>
-            <br/><br/>
-            <button><small>Delete Post</small></button>
-    </form></div>
+        <div class="form-group">
+            <form method="POST">
+                {% csrf_token %}
+                <strong><small>Are you sure?</small></strong>
+                <br/><br/>
+                <button><small>Delete Post</small></button>
+        </form></div>
+    {% else %}
+        You're not allowed to delete this post!
+    {% endif %}
 {% else %}
 
-    You're not allowed to delete posts!
+    You're not allowed to delete this post!
 
 {% endif %}
 

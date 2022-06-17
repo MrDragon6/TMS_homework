@@ -49,6 +49,8 @@
               <small><a href="{% url 'category_add' %}" class="navbar">Add Category</a></small></li>
           <li class="navbar_right">
               <small><a href="{% url 'logout' %}" class="navbar">Logout</a></small></li>
+          <li class="navbar_right">
+              <small><a href="{% url 'edit_profile' user.id %}" class="navbar">Edit Profile</a></small></li>
 
       {% else %}
           <li class="navbar_right">
