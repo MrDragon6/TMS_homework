@@ -10,10 +10,10 @@ venv/
 *.pot
 
 # media
-media/
+#media/
 
 # folders
-static/
+#static/
 build/
 dist/
 

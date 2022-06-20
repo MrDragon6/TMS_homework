@@ -1,4 +1,4 @@
-{% extends 'main/base.html' %}
+{% extends 'base.html' %}
 
 
 {% block content %}
@@ -8,7 +8,7 @@
     {% for post in object_list %}
         <li><a href="{% url 'post_view' post.pk %}">{{ post.title }}</a>
             <small> - <a href="{% url 'category' post.category|slugify %}">{{ post.category }}</a>
-            - {{ post.author }} - {{ post.creation_date.date }}
+            - {{ post.author }} - {{ post.created_at.date }}
                 {% if user.is_authenticated %}
                     {% if user.id == post.author.id %}
                         | <a href="{% url 'post_update' post.pk %}">(Edit)</a>

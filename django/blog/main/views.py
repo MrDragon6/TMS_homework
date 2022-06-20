@@ -5,19 +5,17 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.urls import reverse_lazy, reverse
-from django.forms.models import model_to_dict
 from django.contrib import messages
 
 from django.views import generic
-from django.contrib.auth.forms import UserChangeForm
 
-from .models import Reader, Post, Category
+from .models import Reader, Post, Category, Profile
 from .forms import PostForm, EditForm, UserEditForm
 
 
 @csrf_exempt
 def home(request):
-    return render(request, 'main/home.html')
+    return render(request, 'home.html')
 
 
 @csrf_exempt
@@ -94,8 +92,8 @@ def user_edit(request, user_id):
 
 class HomeView(ListView):
     model = Post
-    template_name = 'main/home.html'
-    ordering = ['-creation_date']
+    template_name = 'home.html'
+    ordering = ['-created_at']
 
     def get_context_data(self, *args, **kwargs):
         category_menu = Category.objects.all()
@@ -104,9 +102,30 @@ class HomeView(ListView):
         return context
 
 
+class ProfileView(DetailView):
+    model = Profile
+    template_name = 'auth/profile_view.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ProfileView, self).get_context_data(*args, **kwargs)
+
+        page_user = get_object_or_404(Profile, id=self.kwargs['pk'])
+
+        context['page_user'] = page_user
+        return context
+
+
+class ProfileEditView(generic.UpdateView):
+    model = Profile
+    template_name = 'auth/profile_page_edit.html'
+    fields = ['bio', 'profile_picture', 'website_url', 'facebook_url',
+              'vkontakte_url', 'instagram_url']
+    success_url = reverse_lazy('home')
+
+
 class PostView(DetailView):
     model = Post
-    template_name = 'main/post_view.html'
+    template_name = 'post/post_view.html'
 
     def get_context_data(self, *args, **kwargs):
         category_menu = Category.objects.all()
@@ -128,7 +147,7 @@ class PostView(DetailView):
 class PostAddView(CreateView):
     model = Post
     form_class = PostForm
-    template_name = 'main/post_add.html'
+    template_name = 'post/post_add.html'
 
     def get_context_data(self, *args, **kwargs):
         category_menu = Category.objects.all()
@@ -140,7 +159,7 @@ class PostAddView(CreateView):
 class PostUpdateView(UpdateView):
     model = Post
     form_class = EditForm
-    template_name = 'main/post_update.html'
+    template_name = 'post/post_update.html'
 
     def get_context_data(self, *args, **kwargs):
         category_menu = Category.objects.all()
@@ -151,7 +170,7 @@ class PostUpdateView(UpdateView):
 
 class PostDeleteView(DeleteView):
     model = Post
-    template_name = 'main/post_delete.html'
+    template_name = 'post/post_delete.html'
     success_url = reverse_lazy('home')
 
     def get_context_data(self, *args, **kwargs):
@@ -163,19 +182,19 @@ class PostDeleteView(DeleteView):
 
 def category_list_view(request):
     category_menu_list = Category.objects.all()
-    return render(request, 'main/category_list.html',
+    return render(request, 'category/category_list.html',
                   {'category_menu_list': category_menu_list})
 
 
 def category_view(request, categories):
     category_posts = Post.objects.filter(category=categories.replace('-', ' '))
-    return render(request, 'main/categories.html',
+    return render(request, 'category/categories.html',
                   {'categories': categories.replace('-', ' ').title(), 'category_posts': category_posts})
 
 
 class CategoryAddView(CreateView):
     model = Category
-    template_name = 'main/category_add.html'
+    template_name = 'category/category_add.html'
     fields = '__all__'
 
     def get_context_data(self, *args, **kwargs):
@@ -190,7 +209,6 @@ def like_view(request, pk):
     liked = False
     if post.likes.filter(id=request.user.id).exists():
         post.likes.remove(request.user)
-        liked = False
     else:
         post.likes.add(request.user)
         liked = True

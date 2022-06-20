@@ -1,4 +1,4 @@
-{% extends 'main/base.html' %}
+{% extends 'base.html' %}
 
 
 {% block title %}Edit Profile{% endblock %}
@@ -6,13 +6,9 @@
 
 {% block content %}
     <div id="login-form-wrap">
-      <h2>Edit Profile</h2>
+      <h2>Edit Settings</h2>
 
-      <br/>
-      {{ user.profile.bio }}
-      <br/>
-
-      <form id="login-form" action="{% url 'edit_profile' user.id %}" method="POST">
+      <form id="login-form" action="{% url 'edit_settings' user.id %}" method="POST">
         {% csrf_token %}
         <p>
         <input type="text" id="username" name="username" value="{{ user.username }}" required>
@@ -35,7 +31,7 @@
             <i class="validation"><span></span><span></span></i>
         </p>
         <p>
-        <input type="submit" id="login" value="Update Profile">
+        <input type="submit" id="login" value="Update">
         </p>
       </form>
       <div id="create-account-wrap">
