@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-from .views import HomeView, PostView, PostAddView, PostUpdateView, \
+from .views import HomeView, PostView, PostAddView, PostUpdateView, ProfileView, ProfileEditView, \
     PostDeleteView, CategoryAddView, category_view, category_list_view, like_view, user_edit
 
 
@@ -20,5 +20,7 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
     path('signup/', views.signup, name='signup'),
-    path('edit_profile/<int:user_id>', user_edit, name='edit_profile'),
+    path('<int:pk>/profile/', ProfileView.as_view(), name='view_profile'),
+    path('<int:pk>/edit_profile_page/', ProfileEditView.as_view(), name='edit_profile_page'),
+    path('edit_profile/<int:user_id>', user_edit, name='edit_settings'),
 ]

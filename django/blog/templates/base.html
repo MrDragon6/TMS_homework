@@ -49,8 +49,16 @@
               <small><a href="{% url 'category_add' %}" class="navbar">Add Category</a></small></li>
           <li class="navbar_right">
               <small><a href="{% url 'logout' %}" class="navbar">Logout</a></small></li>
-          <li class="navbar_right">
-              <small><a href="{% url 'edit_profile' user.id %}" class="navbar">Edit Profile</a></small></li>
+            <li class="dropdown">
+                <small><a href="#" class="navbar">Profile</a></small>
+                <div class="dropdown-content">
+                <small>
+                    <a href="{% url 'view_profile' user.profile.id %}">Show Profile</a>
+                    <a href="{% url 'edit_profile_page' user.profile.id %}">Edit Profile</a>
+                    <a href="{% url 'edit_settings' user.profile.id %}">Edit Settings</a>
+                </small>
+                </div>
+            </li>
 
       {% else %}
           <li class="navbar_right">

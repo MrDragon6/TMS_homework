@@ -45,7 +45,7 @@ class Post(models.Model):
     header_image = models.ImageField(null=True, blank=True, upload_to='images/')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = RichTextField(blank=True, null=True)
-    creation_date = models.DateTimeField(default=datetime.now, blank=True)
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
     category = models.CharField(max_length=255, default='uncategorized')
     snippet = models.CharField(max_length=255)
     likes = models.ManyToManyField(User, related_name='blog_posts')
@@ -64,6 +64,11 @@ class Post(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     bio = models.TextField()
+    profile_picture = models.ImageField(null=True, blank=True, upload_to='images/profile/')
+    website_url = models.CharField(null=True, blank=True, max_length=255)
+    facebook_url = models.CharField(null=True, blank=True, max_length=255)
+    vkontakte_url = models.CharField(null=True, blank=True, max_length=255)
+    instagram_url = models.CharField(null=True, blank=True, max_length=255)
 
     def __str__(self):
         return str(self.user)
