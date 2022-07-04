@@ -25,6 +25,22 @@ class Reader(models.Model):
         return self.user.username
 
 
+class Author(models.Model):
+    class Meta:
+        verbose_name = 'Author'
+        verbose_name_plural = 'Authors'
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name='author',
+    )
+
+    def __str__(self):
+        return self.user.username
+
+
 class Category(models.Model):
     class Meta:
         verbose_name = 'Category'
@@ -46,7 +62,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = RichTextField(blank=True, null=True)
     created_at = models.DateTimeField(default=datetime.now, blank=True)
-    category = models.CharField(max_length=255, default='uncategorized')
+    category = models.ForeignKey(Category, max_length=50, on_delete=models.CASCADE)
     snippet = models.CharField(max_length=255)
     likes = models.ManyToManyField(User, related_name='blog_posts')
 
@@ -72,3 +88,18 @@ class Profile(models.Model):
 
     def __str__(self):
         return str(self.user)
+
+    @staticmethod
+    def get_absolute_url():
+        return reverse('home')
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    body = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s - %s' % (self.post.title, self.name)
+

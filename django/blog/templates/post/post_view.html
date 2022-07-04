@@ -59,6 +59,7 @@
 
     <br/>
 
+    <hr>
     <div class="card mb-3" style="max-width: 540px;">
   <div class="row g-0">
     <div class="col-md-2">
@@ -103,5 +104,30 @@
     </div>
   </div>
 </div>
+
+    <hr>
+    <h1>Comments</h1>
+    <br/>
+    {% if not post.comments.all %}
+        No comments yet =( <a href="{% url 'comment_add' post.pk %}">Be first</a>
+    {% else %}
+
+        <br/><br/>
+
+        {% for comment in post.comments.all %}
+            <strong>
+                {{ comment.name }} - {{ comment.created_at }}
+            </strong>
+            <br/>
+            {{ comment.body }}
+            <br/><br/>
+
+        {% endfor %}
+
+        <a href="{% url 'comment_add' post.pk %}">Add comment</a>
+
+    {% endif %}
+
+    <br/><br/>
 
 {% endblock %}
