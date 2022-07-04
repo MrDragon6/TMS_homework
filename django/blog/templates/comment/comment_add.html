@@ -1,24 +1,25 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Create A New Category
+Comment on blog post
 {% endblock %}
 
 
 {% block content %}
 
 {% if user.is_authenticated %}
-    <h3>Add Category</h3>
+    <h3>Add comment</h3>
     <br/>
     <div class="form-group">
         <form method="POST">
             {% csrf_token %}
             {{ form.as_p }}
-        <button>Add Category</button>
+        <button>Add comment</button>
     </form></div>
+
 {% else %}
 
-    You're not allowed to add posts!
+    Authenticate to leave a comment!
 
 {% endif %}
 

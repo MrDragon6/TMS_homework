@@ -218,3 +218,9 @@ li a.navbar {
 .dropdown:hover .dropdown-content {
   display: block;
 }
+
+.avatar {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+}

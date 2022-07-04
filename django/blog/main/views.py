@@ -9,8 +9,8 @@ from django.contrib import messages
 
 from django.views import generic
 
-from .models import Reader, Post, Category, Profile
-from .forms import PostForm, EditForm, UserEditForm
+from .models import Reader, Post, Category, Profile, Comment
+from .forms import PostForm, EditForm, UserEditForm, CommentForm, ProfilePageForm
 
 
 @csrf_exempt
@@ -31,7 +31,7 @@ def login(request):
 
         if user is not None:
             django_login(request, user)
-            return render(request, 'auth/profile.html', context={'username': user.get_username()})
+            return redirect('home')
         else:
             return render(request, 'auth/login.html')
 
@@ -100,6 +100,16 @@ class HomeView(ListView):
         context = super(HomeView, self).get_context_data(*args, **kwargs)
         context['category_menu'] = category_menu
         return context
+
+
+class ProfilePageCreateView(CreateView):
+    model = Profile
+    form_class = ProfilePageForm
+    template_name = 'auth/profile_page_create.html'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
 class ProfileView(DetailView):
@@ -187,21 +197,22 @@ def category_list_view(request):
 
 
 def category_view(request, categories):
-    category_posts = Post.objects.filter(category=categories.replace('-', ' '))
+    category_posts = Post.objects.filter(category__name__contains=categories.replace('-', ' '))
     return render(request, 'category/categories.html',
                   {'categories': categories.replace('-', ' ').title(), 'category_posts': category_posts})
 
 
-class CategoryAddView(CreateView):
-    model = Category
-    template_name = 'category/category_add.html'
-    fields = '__all__'
+class CommentAddView(CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'comment/comment_add.html'
 
-    def get_context_data(self, *args, **kwargs):
-        category_menu = Category.objects.all()
-        context = super(CategoryAddView, self).get_context_data(*args, **kwargs)
-        context['category_menu'] = category_menu
-        return context
+    def form_valid(self, form):
+        form.instance.post_id = self.kwargs['pk']
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('post_view', kwargs={'pk': self.kwargs['pk']})
 
 
 def like_view(request, pk):

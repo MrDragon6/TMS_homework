@@ -45,17 +45,19 @@
       {% if user.is_authenticated %}
           <li class="navbar">
               <small><a href="{% url 'post_add' %}" class="navbar">Add Post</a></small></li>
-          <li class="navbar">
-              <small><a href="{% url 'category_add' %}" class="navbar">Add Category</a></small></li>
           <li class="navbar_right">
               <small><a href="{% url 'logout' %}" class="navbar">Logout</a></small></li>
             <li class="dropdown">
-                <small><a href="#" class="navbar">Profile</a></small>
+                <small><a href="#" class="navbar">{{ user.username }}</a></small>
                 <div class="dropdown-content">
                 <small>
-                    <a href="{% url 'view_profile' user.profile.id %}">Show Profile</a>
-                    <a href="{% url 'edit_profile_page' user.profile.id %}">Edit Profile</a>
-                    <a href="{% url 'edit_settings' user.profile.id %}">Edit Settings</a>
+                    {% if user.profile.id %}
+                        <a href="{% url 'view_profile' user.profile.id %}">Show Profile</a>
+                        <a href="{% url 'edit_profile_page' user.profile.id %}">Edit Profile</a>
+                        <a href="{% url 'edit_settings' user.profile.id %}">Edit Settings</a>
+                    {% else %}
+                        <a href="{% url 'create_profile_page' %}">Create Profile Page</a>
+                    {% endif %}
                 </small>
                 </div>
             </li>
