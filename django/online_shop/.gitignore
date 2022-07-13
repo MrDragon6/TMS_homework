@@ -1,0 +1,13 @@
+# Byte-compiled files
+__pycache__/
+
+# Venv files
+venv/
+
+# media
+#media/
+
+# folders
+#static/
+
+.env
