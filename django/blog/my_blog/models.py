@@ -30,12 +30,17 @@ class Author(models.Model):
         verbose_name = 'Author'
         verbose_name_plural = 'Authors'
 
+    subscribers = models.ManyToManyField(User, related_name='authors')
+
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
         primary_key=True,
         related_name='author',
     )
+
+    def total_subscribers(self):
+        return self.subscribers.count()
 
     def __str__(self):
         return self.user.username
@@ -102,4 +107,23 @@ class Comment(models.Model):
 
     def __str__(self):
         return '%s - %s' % (self.post.title, self.name)
+
+
+class Subscription(models.Model):
+    class Meta:
+        verbose_name = 'Subscription'
+        verbose_name_plural = 'Subscriptions'
+
+    subscription_user = models.ManyToManyField(User, related_name='subscriptions')
+    subscriber_user = models.ManyToManyField(User, related_name='subscribers')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        for user in self.subscription_user.values('username'):
+            for subscriber in self.subscriber_user.values('username'):
+                return '%s <- %s' % (user.get('username'), subscriber.get('username'))
+
+    @staticmethod
+    def get_absolute_url():
+        return reverse('home')
 

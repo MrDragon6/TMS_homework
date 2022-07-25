@@ -8,14 +8,14 @@
     <div id="login-form-wrap">
       <h2>Edit Settings</h2>
 
-      <form id="login-form" action="{% url 'edit_settings' user.id %}" method="POST">
+      <form id="login-form" action="{% url 'edit_settings' request.user.id %}" method="POST">
         {% csrf_token %}
         <p>
         <input type="text" id="username" name="username" value="{{ user.username }}" required>
             <i class="validation"><span></span><span></span></i>
         </p>
         <p>
-          <input type="text" id="password" name="password" placeholder="new password" required>
+          <input type="hidden" id="password" name="password" value="{{ user.password }}">
             <i class="validation"><span></span><span></span></i>
         </p>
         <p>

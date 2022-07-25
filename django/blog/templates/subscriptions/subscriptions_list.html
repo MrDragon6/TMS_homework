@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+My Subscriptions
+{% endblock %}
+
+
+{% block content %}
+
+    <h1>My Subscriptions</h1>
+
+        {% for post in subscription_posts %}
+            <h4><a href="{% url 'post_view' post.pk %}">{{ post.title }}</a><small>
+                - <a href="{% url 'category' post.category|slugify %}">{{ post.category }}</a>
+            - {{ post.author }} - {{ post.created_at.date }}<br/>
+            {{ post.snippet }}
+            </small>
+            </h4>
+        {% endfor %}
+
+{% endblock %}

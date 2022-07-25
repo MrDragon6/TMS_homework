@@ -18,7 +18,11 @@
 </head>
 <body>
   <ul class="navbar">
-  <li class="navbar"><small><a href="{% url 'home' %}" class="navbar">Home</a></small></li>
+      <li class="navbar"><small>
+          <a class="navbar"><span style="color: #3ca9e2">-My Blog-</span></a>
+      </small></li>
+
+      <li class="navbar"><small><a href="{% url 'home' %}" class="navbar">Home</a></small></li>
 
   <!-- Category Menu Code -->
   {% if category_menu %}
@@ -44,20 +48,29 @@
 
       {% if user.is_authenticated %}
           <li class="navbar">
-              <small><a href="{% url 'post_add' %}" class="navbar">Add Post</a></small></li>
+              <small><a href="{% url 'subscriptions_list' %}" class="navbar">Subscriptions</a></small></li>
+          {% if user.author %}
+              <li class="navbar">
+                  <small><a href="{% url 'post_add' %}" class="navbar">Add Post</a></small></li>
+          {% endif %}
           <li class="navbar_right">
               <small><a href="{% url 'logout' %}" class="navbar">Logout</a></small></li>
-            <li class="dropdown">
+            <li class="dropdown_right">
                 <small><a href="#" class="navbar">{{ user.username }}</a></small>
                 <div class="dropdown-content">
                 <small>
+                    {% if not user.author %}
+                        <a href="{% url 'create_author' user.id %}">Become an Author</a>
+                    {% endif %}
+
                     {% if user.profile.id %}
                         <a href="{% url 'view_profile' user.profile.id %}">Show Profile</a>
                         <a href="{% url 'edit_profile_page' user.profile.id %}">Edit Profile</a>
-                        <a href="{% url 'edit_settings' user.profile.id %}">Edit Settings</a>
+                        <a href="{% url 'edit_settings' user.id %}">Edit Settings</a>
                     {% else %}
                         <a href="{% url 'create_profile_page' %}">Create Profile Page</a>
                     {% endif %}
+                    <a href="{% url 'password_edit' user.id %}">Change Password</a>
                 </small>
                 </div>
             </li>

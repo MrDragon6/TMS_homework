@@ -1,6 +1,7 @@
 from django import forms
 from .models import Post, Category, User, Comment, Profile
 
+
 choices = Category.objects.all().values_list('name', 'name')
 choice_list = [choice for choice in choices]
 
@@ -45,7 +46,7 @@ class CommentForm(forms.ModelForm):
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('username', 'password', 'email', 'first_name', 'last_name')
+        fields = ('username', 'email', 'first_name', 'last_name')
 
 
 class ProfilePageForm(forms.ModelForm):
