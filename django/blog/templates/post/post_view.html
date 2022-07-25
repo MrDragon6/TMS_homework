@@ -78,8 +78,9 @@
             {{ post.author.username }}
         </h5>
           <p class="small text-muted">
-
-              <a href="{% url 'view_profile' post.author.profile.id %}">Profile Page</a>
+              {% if post.author.profile %}
+                <a href="{% url 'view_profile' post.author.profile.id %}">Profile Page</a>
+              {% endif %}
 
               {% if post.author.profile.website_url %}
                 | <a href="{{ post.author.profile.website_url }}">Website</a>

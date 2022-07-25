@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  django:
+    build: .
+    container_name: django
+    command: python manage.py runserver 0.0.0:8000
+    volumes:
+      - .:/usr/src/my_blog/
+    ports:
+      - '8000:8000'
+    environment:
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+  celery:
+    build: .
+    command: celery worker --app=core --loglevel=info
+    volumes:
+      - .:/usr/src/my_blog
+    depends_on:
+      - django
+      - redis
+  db:
+    image: mysql
+    container_name: db
+    ports:
+      - '3306'
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_DATABASE: 'database'
+  redis:
+    image: 'redis:alpine'

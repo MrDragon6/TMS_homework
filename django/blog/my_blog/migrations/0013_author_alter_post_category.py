@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('auth', '0012_alter_user_first_name_max_length'),
-        ('main', '0012_comment'),
+        ('my_blog', '0012_comment'),
     ]
 
     operations = [
@@ -26,6 +26,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='post',
             name='category',
-            field=models.ForeignKey(max_length=50, on_delete=django.db.models.deletion.CASCADE, to='main.category'),
+            field=models.ForeignKey(max_length=50, on_delete=django.db.models.deletion.CASCADE, to='my_blog.category'),
         ),
     ]

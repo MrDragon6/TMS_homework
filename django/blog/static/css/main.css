@@ -196,6 +196,11 @@ li a.navbar {
     float: left;
 }
 
+  li.dropdown_right {
+  display: inline-block;
+    float: right;
+}
+
 .dropdown-content {
   display: none;
   position: absolute;
@@ -216,6 +221,10 @@ li a.navbar {
 .dropdown-content a:hover {background-color: #fff;}
 
 .dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown_right:hover .dropdown-content {
   display: block;
 }
 

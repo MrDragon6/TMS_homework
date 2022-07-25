@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('main', '0004_category_post_category'),
+        ('my_blog', '0004_category_post_category'),
     ]
 
     operations = [
