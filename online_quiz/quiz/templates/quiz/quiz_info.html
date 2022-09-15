@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ quiz.title }}
+{% endblock %}
+
+
+{% block content %}
+    <h2>{{ quiz.title }}</h2>
+    <small>Created:
+        {{ quiz.created_at }}
+    </small>
+    <br/>
+    <hr>
+    <br/>
+        <h2>Quiz with {{ quiz.questions.count }} questions</h2>
+        <img src="{{ quiz.image.url }}" alt="quiz_image" style="vertical-align: center;margin:50px 0px">
+
+    <br/><br/>
+
+    <h2>{{ quiz.description }}</h2>
+
+    <br><br/>
+    <a href="{% url 'quiz_questions' quiz.id %}" class="button"><small>Start quiz!</small></a>
+    <a href="{% url 'quiz_list' %}" class="button"><small>Back</small></a>
+
+    <br/><br/>
+    <hr>
+    <br/>
+    <form action="{% url 'quiz_like' quiz.pk %}"
+          method = "POST">
+    {% csrf_token %}
+
+    {% if user.is_authenticated %}
+
+        {% if liked %}
+            <button type="submit" name="quiz_id" value="{{ quiz.id }}"
+                    class="">Unlike</button>
+        {% else %}
+            <button type="submit" name="quiz_id" value="{{ quiz.id }}"
+                    class="">Like</button>
+        {% endif %}
+    {% else %}
+        <small>Login to like</small>
+
+    {% endif %}
+
+        - {{ total_likes }} Likes
+    </form>
+
+    <br/><br/>
+    <p><a href="{% url 'quiz_list' %}">Back to Quizzes List</a><p>
+
+{% endblock %}

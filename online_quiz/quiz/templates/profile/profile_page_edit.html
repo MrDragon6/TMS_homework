@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Edit Profile Page
+{% endblock %}
+
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    {% if contestant.id == profile.contestant.id %}
+        <h3>Edit Profile Page</h3>
+        <br/>
+        <div class="form-group">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+            <button>Update Profile Page</button>
+        </form></div>
+
+    {% else %}
+
+        You're not allowed to edit this profile!
+
+    {% endif %}
+
+{% else %}
+
+    You are not authenticated!
+
+{% endif %}
+
+{% endblock %}

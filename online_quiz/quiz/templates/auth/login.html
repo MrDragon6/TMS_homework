@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Login{% endblock %}
+
+
+{% block content %}
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div id="login-form-wrap">
+      <h2>Login</h2>
+      <form id="login-form" action="{% url 'login' %}"  method="POST">
+        {% csrf_token %}
+        <p>
+        <input class="auth" type="text" id="username" name="username" placeholder="username" required><i class="validation"><span></span><span></span></i>
+        </p>
+        <p>
+        <input class="auth" type="password" id="password" name="password" placeholder="password" required><i class="validation"><span></span><span></span></i>
+        </p>
+        <p>
+        <input class="auth" type="submit" id="login" value="Login">
+        </p>
+      </form>
+      <div id="create-account-wrap">
+        <p>Not a member? <a href="{% url 'signup' %}">Create Account</a><p>
+      </div>
+    </div>
+{% endblock %}

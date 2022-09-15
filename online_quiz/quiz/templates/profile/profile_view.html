@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+    <h3>User Profile</h3>
+
+    <div class="card mb-3" style="max-width: 800px;">
+  <div class="row g-0">
+    <div class="col-md-2">
+      <img src="{{ page_user.profile_picture.url }}"
+           class="avatar">
+    </div>
+    <div class="col-md-10">
+      <div class="card-body">
+        <h5 class="card-title">
+            {{ page_user.contestant.user.username }}
+            <br/>
+            <small>
+                {% if page_user.contestant.is_admin %}
+                    (admin)
+                {% else %}
+                    (contestant)
+                {% endif %}
+            </small>
+        </h5>
+          <p class="small text-muted">
+
+              {% if page_user.social_link %}
+                <a href="https://{{ page_user.social_link }}">{{ page_user.social_link }}</a>
+              {% endif %}
+          </p>
+        <p class="card-text">
+            {% if page_user.bio %}
+                {{ page_user.bio }}
+            {% else %}
+                No bio for this user :(
+            {% endif %}
+        </p>
+        <p class="card-text">
+
+            {% csrf_token %}
+
+            {{ page_user.contestant.points }} points
+            {% if user_quiz_completion %}
+                <hr>
+                {% for completion in user_quiz_completion %}
+                    <span style="color: darkblue">{{ completion.quiz }} quiz</span> -
+                    {{ completion.score }} points<br/>
+                    <small>{{ completion.completion_time }}</small><br/>
+                    <br/>
+                {% endfor %}
+            {% endif %}
+            </form>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

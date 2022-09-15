@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Edit Profile{% endblock %}
+
+
+{% block content %}
+    <div id="login-form-wrap">
+      <h2>Edit Settings</h2>
+
+      <form id="login-form" action="{% url 'edit_settings' request.user.id %}" method="POST">
+        {% csrf_token %}
+        <p>
+        <input class="auth" type="text" id="username" name="username" value="{{ user.username }}" required>
+            <i class="validation"><span></span><span></span></i>
+        </p>
+        <p>
+          <input class="auth" type="hidden" id="password" name="password" value="{{ user.password }}">
+            <i class="validation"><span></span><span></span></i>
+        </p>
+        <p>
+          <input class="auth" type="email" name="email" value="{{ user.email }}" required>
+            <i class="validation"><span></span><span></span></i>
+        </p>
+        <p>
+          <input class="auth" type="text" name="first_name" value="{{ user.first_name }}" required>
+            <i class="validation"><span></span><span></span></i>
+        </p>
+        <p>
+          <input class="auth" type="text" name="last_name" value="{{ user.last_name }}" required>
+            <i class="validation"><span></span><span></span></i>
+        </p>
+        <p>
+        <input class="auth" type="submit" id="login" value="Update">
+        </p>
+      </form>
+      <div id="create-account-wrap">
+        <p>Changed your mind? <a href="{% url 'home' %}">Return</a><p>
+      </div>
+    </div>
+{% endblock %}

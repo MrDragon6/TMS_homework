@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Admin Panel
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  {% if user.contestant.is_admin %}
+
+    <h3>Quizzes</h3>
+    <ul>
+    {% for quiz in quiz_list %}
+        <li><a href="{% url 'quiz_info' quiz.pk %}">{{ quiz.title }}</a>
+            <small> - {{ quiz.created_at.date }}
+                    - {{ quiz.questions.count }} Questions
+
+                    {% if quiz.is_public %}
+                        - Public
+                    {% elif not quiz.is_public and quiz.questions.count >= 10 %}
+                        - Private
+                    {% else %}
+                        - Private (>=10 questions to make Public)
+                    {% endif %}
+
+                <br>
+                <form action="{% url 'quiz_switch_access' quiz.pk %}"
+                      method = "POST">
+
+                {% if not quiz.is_public %}
+                    <a href="{% url 'edit_quiz' quiz.id %}">(Edit Quiz)</a>
+                    <a href="{% url 'delete_quiz' quiz.pk %}">(Delete Quiz)</a>
+                    <a href="{% url 'add_question' quiz.id %}">(Add Question)</a>
+                    <a href="{% url 'list_questions' quiz.id %}">(Edit/Delete Question)</a>
+                {% else %}
+                    Make Quiz Private to edit it
+                {% endif %}
+
+                {% csrf_token %}
+
+                    {% if quiz.is_public %}
+                        <button type="submit" name="quiz_id" value="{{ quiz.id }}"
+                                class="">Make Private</button>
+                    {% elif not quiz.is_public and quiz.questions.count < 10 %}
+                        <br/>
+                        Need at least 10 questions to make this quiz Public
+                    {% else %}
+                        <button type="submit" name="quiz_id" value="{{ quiz.id }}"
+                                class="">Make Public</button>
+                    {% endif %}
+                </form>
+
+            </small>
+            <br>
+            </li>
+
+    {% endfor %}
+
+        <hr>
+        <a href="{% url 'add_quiz' %}">Add New Quiz</a>
+
+    </ul>
+
+    {% else %}
+
+        You're not allowed here!
+
+    {% endif %}
+
+{% else %}
+
+    You are not authenticated!
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Add Quiz
+{% endblock %}
+
+
+{% block content %}
+    {% if user.is_authenticated %}
+    {% if user.contestant.is_admin %}
+
+    <div class="col-md-6">
+        <h1>Add Quiz</h1>
+        <div class="card card-body">
+            <form action="" method="POST" enctype='multipart/form-data'>
+                {% csrf_token %}
+                    {{ form.media }}
+                    {{ form.as_p }}
+                    <br>
+                <input type="submit" name="Submit">
+            </form>
+        </div>
+    </div>
+
+        <br/>
+        <p>Changed your mind? <a href="{% url 'admin_panel' %}">Return</a><p>
+
+    {% else %}
+
+        You're not allowed to add new quizzes!
+
+    {% endif %}
+
+{% else %}
+
+    You are not authenticated!
+
+{% endif %}
+
+
+{% endblock %}
