@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+All questions - {{ quiz.title }}
+{% endblock %}
+
+
+{% block content %}
+
+    {% if user.is_authenticated %}
+    {% if user.contestant.is_admin %}
+
+        <h3>Questions</h3>
+        <ul>
+        {% for question in questions %}
+            <li><a>{{ question.title }}</a>
+            (<small><a>{{ question.right_answer }}</a></small>)
+            <a href="{% url 'edit_question' question.pk %}">(Edit)</a>
+            <a href="{% url 'delete_question' question.pk %}">(Delete)</a>
+            <br/></li>
+        {% endfor %}
+        </ul>
+
+        <br/>
+        <p>Changed your mind? <a href="{% url 'admin_panel' %}">Return</a><p>
+
+    {% else %}
+
+        You're not allowed to add new quizzes!
+
+    {% endif %}
+
+{% else %}
+
+    You are not authenticated!
+
+{% endif %}
+
+{% endblock %}

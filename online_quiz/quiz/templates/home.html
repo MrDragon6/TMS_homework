@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+    {% if user.is_authenticated %}
+        <h2>Hello and welcome, {{ request.user.username }}!</h2><br>
+    {% else %}
+        <h2>Hello and welcome!</h2>
+        <h2>Login/register to see all quizzes!</h2>
+    {% endif %}
+
+    <div>
+    <div style="float: left">
+        <img src="../media/quiz_home.jpg" alt="quiz_home">
+    </div>
+    <div style="text-align-last: center">
+        <br><br>{{ date_time }}
+        <br><br>
+        <b>Our statistics:</b>
+        <br>
+            ✔️{{ quiz_num }} quizzes available!<br>
+            ✔️{{ contestant_num }} contestants registered!<br>
+            ✔️{{ points_sum }} total points earned!
+    </div>
+    </div>
+
+
+{% endblock %}

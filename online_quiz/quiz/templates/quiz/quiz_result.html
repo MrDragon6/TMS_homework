@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ quiz.title }} Quiz Result
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+    <h2><span style="color: darkgreen">Quiz "{{ quiz.title }}" Complete!</span></h2>
+    <h3 class="my-4">Attempted Questions</h3>
+    <table class="table table=bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Question</th>
+                <th>Submitted Answer</th>
+                <th>Right Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in result %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ row.question }}</td>
+                    {% if row.chosen_answer|striptags == row.question.right_answer %}
+                        <td class="bg-success text-white">{{ row.chosen_answer|striptags }}</td>
+                    {% else %}
+                        <td class="bg-danger text-white">{{ row.chosen_answer|striptags }}</td>
+                    {% endif %}
+                    <td>{{ row.question.right_answer }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <h3 class="my-4">Result Detail</h3>
+    <table class="table table=bordered">
+        <tr>
+            <th>Total Questions</th>
+            <td>{{ result.count }}</td>
+        </tr>
+        <tr>
+            <th>Total Skipped Questions</th>
+            <td>{{ total_skipped }}</td>
+        </tr>
+        <tr>
+            <th>Total Attempted Questions</th>
+            <td>{{ attempted }}</td>
+        </tr>
+        <tr>
+            <th>Right Answers</th>
+            <td>{{ right_answers_num }}</td>
+        </tr>
+        <tr>
+            <th>Percentage</th>
+            <td>{{ percentage }}%</td>
+        </tr>
+        <tr>
+            <th><span style="color: darkblue">Score</span></th>
+            <td><span style="color: darkblue">{{ score }}</span></td>
+        </tr>
+    </table>
+
+{% else %}
+    <h2>Login/register to see this quiz!</h2>
+{% endif %}
+
+{% endblock %}
