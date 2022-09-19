@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ quiz.title }} - delete
+{% endblock %}
+
+
+{% block content %}
+
+    {% if user.is_authenticated %}
+    {% if user.contestant.is_admin %}
+
+    <div class="col-md-6">
+        <h1>Delete Quiz: {{ quiz.title }}</h1>
+        <div class="form-group">
+            <form method="POST">
+                {% csrf_token %}
+                <strong><small>Are you sure?</small></strong>
+                <br/><br/>
+                <button type="submit" class="btn btn-primary"><small>Delete Quiz</small></button>
+        </form></div>
+
+        <br/>
+        <p>Changed your mind? <a href="{% url 'admin_panel' %}">Return</a><p>
+
+    </div>
+
+    {% else %}
+
+        You're not allowed to delete this quiz!
+
+    {% endif %}
+
+{% else %}
+
+    You are not authenticated!
+
+{% endif %}
+
+
+{% endblock %}

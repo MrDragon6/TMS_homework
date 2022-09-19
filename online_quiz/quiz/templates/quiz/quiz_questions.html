@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ quiz.title }} Questions
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+    <h3 class="my-4">Quiz: <span style="color: darkblue">{{ quiz.title }}</span></h3>
+    <h3 class="my-4">Question: <span style="color: darkblue">{{ quest_number }} of {{ quiz.questions.count }}</span></h3>
+    <div class="card my-4 border-dark shadow">
+        <h4 class="card-header border-dark">{{ question.title|linebreaks }}
+        {% if question.image %}
+            <img src="{{ question.image.url }}" width="300" height="200"
+                 alt="question_image" style="vertical-align: center;margin:50px 0px">
+        {% endif %}
+            <h4 style="background-color:Orange"><span class="timer float-left"></span></h4></h4>
+        <form method="post" action="{% url 'submit_answer' quiz.id question.id %}">
+            {% csrf_token %}
+            <div class="card-body">
+                <table class="table table-bordered align-left">
+                    <tr>
+                        <td><input value="{{ question.answer_1|linebreaks }}" id="answer_1" name="answer" type="radio" /></td>
+                        <th><label for="answer_1">{{ question.answer_1|linebreaks }}</label></th>
+                    </tr>
+                    <tr>
+                        <td><input value="{{ question.answer_2|linebreaks }}" id="answer_2" name="answer" type="radio" /></td>
+                        <th><label for="answer_2">{{ question.answer_2|linebreaks }}</label></th>
+                    </tr>
+                    <tr>
+                        <td><input value="{{ question.answer_3|linebreaks }}" id="answer_3" name="answer" type="radio" /></td>
+                        <th><label for="answer_3">{{ question.answer_3|linebreaks }}</label></th>
+                    </tr>
+                    <tr>
+                        <td><input value="{{ question.answer_4|linebreaks }}" id="answer_4" name="answer" type="radio" /></td>
+                        <th><label for="answer_4">{{ question.answer_4|linebreaks }}</label></th>
+                    </tr>
+                </table>
+            </div>
+            <div class="card-footer">
+                <input type="submit" name="skip" value="Skip" class="btn btn-warning skipBtn"/>
+                <input type="submit" name="submit" value="Submit" class="btn btn-primary submitBtn"/>
+            </div>
+        </form>
+    </div>
+
+    <script type="text/javascript" src="{% static 'jquery-3.6.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jQuery.countdownTimer.min.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".submitBtn").on('click', function(){
+                var _checkedAns=$("input[name='answer']:checked").val();
+                if(_checkedAns==undefined){
+                    alert('Please choose your answer!');
+                    return false;
+                }
+            });
+
+            $(".timer").countdowntimer({
+                seconds : "{{ question.time_limit }}",
+                size : "sm",
+                displayFormat: "MS",
+                timeUp : function(){
+                    $(".skipBtn").trigger('click');
+                }
+            });
+
+        });
+    </script>
+
+{% else %}
+    <h2>Login/register to see this quiz!</h2>
+{% endif %}
+
+{% endblock %}
